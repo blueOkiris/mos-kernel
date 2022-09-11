@@ -1,0 +1,18 @@
+[package]
+name = "cyub_os_kernel"
+version = "22.31.1"
+edition = "2021"
+
+[lib]
+name = "cyub_os_kernel"
+crate_type = [ "staticlib" ]
+
+[profile.dev]
+panic = "abort"
+overflow-checks = false
+
+[profile.release]
+panic = "abort"
+overflow-checks = false
+
+[dependencies]
