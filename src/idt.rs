@@ -45,7 +45,7 @@ pub struct IdtGate64 {
 
 #[no_mangle]
 pub extern "C" fn isr1_handler() {
-    let _key = inb(0x60);
+    print_u64(inb(0x60) as u64, ForegroundColor::White, BackgroundColor::Black);
 
     outb(0x20, 0x20);
     outb(0xA0, 0x20);
