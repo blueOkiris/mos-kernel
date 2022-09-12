@@ -3,12 +3,11 @@
  * Description: Handle kernel interrupts
  */
 
-use core::arch::asm;
 use crate::{
     io::{
         inb, outb
     }, terminal::{
-        print_str, ForegroundColor, BackgroundColor, set_cursor_pos, print_u64
+        print_str, ForegroundColor, BackgroundColor, print_u64
     }
 };
 
