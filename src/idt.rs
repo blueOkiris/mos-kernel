@@ -3,6 +3,10 @@
  * Description: Handle kernel interrupts
  */
 
+use core::{
+    intrinsics::unreachable,
+    arch::asm
+};
 use crate::{
     io::{
         inb, outb
@@ -25,7 +29,6 @@ pub static mut IDT: [IdtGate64; 256] = [
 ];
 
 extern "C" {
-    fn isr1() -> u64;
     fn load_idt();
 }
 
@@ -42,13 +45,29 @@ pub struct IdtGate64 {
     zero: u32 // 4b
 } // Sum = 16 bytes
 
-#[no_mangle]
-pub extern "C" fn isr1_handler() {
+fn isr1_handler() {
     print_u64(inb(0x60) as u64, ForegroundColor::White, BackgroundColor::Black);
     print_str("\n", ForegroundColor::White, BackgroundColor::Black);
 
     outb(0x20, 0x20);
     outb(0xA0, 0x20);
+}
+
+fn isr1() -> ! {
+    unsafe {
+        asm!(
+            "mov rdi, rsp",
+            "sub rsp, 8", // Align stack pointer
+            "call rax",
+            in("rax") isr1_handler
+        );
+
+        asm!(
+            "add rsp, 8", // Undo stack alignment
+            "iretq"
+        );
+        unreachable();
+    }
 }
 
 pub fn idt_init() {
