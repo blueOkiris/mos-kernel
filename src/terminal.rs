@@ -104,12 +104,15 @@ pub fn print_str(msg: &str, fg: ForegroundColor, bg: BackgroundColor) {
 
     // Update cursor
     let mut new_crsr_x = crsr_x;
-    let new_crsr_y = if new_crsr_x >= VGA_WIDTH {
+    let mut new_crsr_y = if new_crsr_x >= VGA_WIDTH {
         new_crsr_x -= VGA_WIDTH;
         crsr_y + 1
     } else {
         crsr_y
     };
+    if new_crsr_y >= VGA_HEIGHT {
+        new_crsr_y = 0;
+    }
     set_cursor_pos(new_crsr_x, new_crsr_y);
 }
 
@@ -155,12 +158,15 @@ pub fn print_u64(val: u64, fg: ForegroundColor, bg: BackgroundColor) {
 
     // Update cursor
     let mut new_crsr_x = crsr_x;
-    let new_crsr_y = if new_crsr_x >= VGA_WIDTH {
+    let mut new_crsr_y = if new_crsr_x >= VGA_WIDTH {
         new_crsr_x -= VGA_WIDTH;
         crsr_y + 1
     } else {
         crsr_y
     };
+    if new_crsr_y >= VGA_HEIGHT {
+        new_crsr_y = 0;
+    }
     set_cursor_pos(new_crsr_x, new_crsr_y);
 }
 
