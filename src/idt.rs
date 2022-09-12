@@ -74,7 +74,7 @@ pub fn idt_init() {
     outb(0x21, 0xFD);
     outb(0xA1, 0xFF);
 
-    print_str("Loading IDT...\n", ForegroundColor::White, BackgroundColor::Black);
+    print_str("Loading IDT...", ForegroundColor::White, BackgroundColor::Black);
     unsafe {
         //load_idt();
         asm!(
@@ -82,4 +82,6 @@ pub fn idt_init() {
             sti"
         );
     }
+
+    print_str(" Done.\n", ForegroundColor::White, BackgroundColor::Black);
 }
