@@ -46,6 +46,7 @@ pub struct IdtGate64 {
 #[no_mangle]
 pub extern "C" fn isr1_handler() {
     print_u64(inb(0x60) as u64, ForegroundColor::White, BackgroundColor::Black);
+    print_str("\n", ForegroundColor::White, BackgroundColor::Black);
 
     outb(0x20, 0x20);
     outb(0xA0, 0x20);
@@ -53,8 +54,6 @@ pub extern "C" fn isr1_handler() {
 
 pub fn idt_init() {
     let isr_ptr = isr1 as *const () as u64;
-    //print_u64(isr_ptr, ForegroundColor::White, BackgroundColor::Black);
-    //print_str("\n", ForegroundColor::White, BackgroundColor::Black);
     for table in 0..256 {
         unsafe {
             IDT[table].offset_low = (isr_ptr & 0x000000000000FFFF) as u16;
