@@ -96,7 +96,6 @@ pub fn idt_init() {
             base: &IDT as *const _ as u64,
             limit: (size_of::<[IdtGate64; 256]>() - 1) as u16
         };
-        print_u64(ptr.base, ForegroundColor::White, BackgroundColor::Black);
         asm!(
             "lidt [{}]",
             "sti",
