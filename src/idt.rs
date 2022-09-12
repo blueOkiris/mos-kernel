@@ -64,7 +64,7 @@ pub fn idt_init() {
             // Probably not be needed
             IDT[table].zero = 0;
             IDT[table].ist = 0;
-            IDT[table].selector = 0x10;
+            IDT[table].selector = 0x08;
             IDT[table].types_attr = 0x8E;
         }
     }
