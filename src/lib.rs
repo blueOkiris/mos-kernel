@@ -5,6 +5,7 @@
 
 #![no_std]
 #![feature(panic_info_message)]
+#![feature(core_intrinsics)]
 #![allow(dead_code)] // Normally wouldn't, but bc of linking to ASM, there's lots of dead code
 
 mod kernel;
