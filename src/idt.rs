@@ -5,7 +5,8 @@
 
 use core::{
     intrinsics::unreachable,
-    arch::asm
+    arch::asm,
+    mem::size_of
 };
 use crate::{
     io::{
@@ -28,10 +29,6 @@ pub static mut IDT: [IdtGate64; 256] = [
     }; 256
 ];
 
-extern "C" {
-    fn load_idt();
-}
-
 // Make sure for IDT stuff that structs are layed out w/out optimization
 #[derive(Clone, Copy)]
 #[repr(C)]
@@ -44,6 +41,13 @@ pub struct IdtGate64 {
     offset_high: u32, // 4b
     zero: u32 // 4b
 } // Sum = 16 bytes
+
+#[derive(Clone, Copy)]
+#[repr(C, packed(2))]
+pub struct IdtDescriptor {
+    limit: u16,
+    base: u64
+}
 
 #[no_mangle]
 pub extern "C" fn isr1_handler() {
@@ -88,6 +92,16 @@ pub fn idt_init() {
     outb(0xA1, 0xFF);
 
     unsafe {
-        load_idt();
+        let ptr = IdtDescriptor {
+            base: &IDT as *const _ as u64,
+            limit: (size_of::<[IdtGate64; 256]>() - 1) as u16
+        };
+        print_u64(ptr.base, ForegroundColor::White, BackgroundColor::Black);
+        asm!(
+            "lidt [{}]",
+            "sti",
+            in(reg) &ptr, options(readonly, nostack, preserves_flags)
+        );
     }
 }
+
