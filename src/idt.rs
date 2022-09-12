@@ -52,6 +52,7 @@ pub extern "C" fn isr1_handler() {
 }
 
 pub fn idt_init() {
+    print_str("Setting up IDT\n", ForegroundColor::White, BackgroundColor::Black);
     let isr_ptr = isr1 as *const () as u64;
     //print_u64(isr_ptr, ForegroundColor::White, BackgroundColor::Black);
     //print_str("\n", ForegroundColor::White, BackgroundColor::Black);
@@ -68,11 +69,12 @@ pub fn idt_init() {
             IDT[table].types_attr = 0x8E;
         }
     }
-    print_str("Loading IDT\n", ForegroundColor::White, BackgroundColor::Black);
 
+    print_str("Enabling keyboard IDT\n", ForegroundColor::White, BackgroundColor::Black);
     outb(0x21, 0xFD);
     outb(0xA1, 0xFF);
 
+    print_str("Loading IDT...\n", ForegroundColor::White, BackgroundColor::Black);
     unsafe {
         load_idt();
     }
