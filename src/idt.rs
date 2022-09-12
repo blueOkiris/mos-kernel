@@ -68,6 +68,7 @@ pub fn idt_init() {
             IDT[table].types_attr = 0x8E;
         }
     }
+    print_str("Loading IDT\n", ForegroundColor::White, BackgroundColor::Black);
 
     outb(0x21, 0xFD);
     outb(0xA1, 0xFF);
