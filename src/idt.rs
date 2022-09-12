@@ -27,10 +27,10 @@ pub static mut IDT: [IdtGate64; 256] = [
         zero: 0
     }; 256
 ];
-static mut IDT_DESC: IdtDescriptor = IdtDescriptor {
-    limit: 4095,
-    base: 0
-};
+
+extern "C" {
+    fn load_idt();
+}
 
 // Make sure for IDT stuff that structs are layed out w/out optimization
 #[derive(Clone, Copy)]
@@ -45,13 +45,8 @@ pub struct IdtGate64 {
     zero: u32 // 4b
 } // Sum = 16 bytes
 
-#[repr(C)]
-struct IdtDescriptor {
-    limit: u16,
-    base: u64
-}
-
-fn isr1_handler() {
+#[no_mangle]
+pub extern "C" fn isr1_handler() {
     print_u64(inb(0x60) as u64, ForegroundColor::White, BackgroundColor::Black);
     print_str("\n", ForegroundColor::White, BackgroundColor::Black);
 
@@ -64,12 +59,9 @@ fn isr1() -> ! {
         asm!(
             "mov rdi, rsp",
             "sub rsp, 8", // Align stack pointer
-            "call rax",
-            in("rax") isr1_handler
-        );
-
-        asm!(
+            "call isr1_handler",
             "add rsp, 8", // Undo stack alignment
+            "pop rax",
             "iretq"
         );
         unreachable();
@@ -96,11 +88,6 @@ pub fn idt_init() {
     outb(0xA1, 0xFF);
 
     unsafe {
-        IDT_DESC.base = &IDT as *const _ as u64;
-        asm!(
-            "lidt [rax]",
-            "sti",
-            in("rax") &IDT_DESC as *const _ as u64
-        );
+        load_idt();
     }
 }
