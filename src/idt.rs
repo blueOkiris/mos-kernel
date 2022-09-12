@@ -16,7 +16,7 @@ use crate::{
 pub static mut IDT: [IdtGate64; 256] = [
     IdtGate64 {
         offset_low: 0,
-        selector: 0x08,
+        selector: 0x10,
         ist: 0,
         types_attr: 0x8E,
         offset_mid: 0,
@@ -26,7 +26,7 @@ pub static mut IDT: [IdtGate64; 256] = [
 ];
 
 extern "C" {
-    fn isr1();
+    fn isr1() -> u64;
     fn load_idt();
 }
 
