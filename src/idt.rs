@@ -69,37 +69,6 @@ pub fn idt_init() {
         }
     }
 
-    print_str("Keyboard IDT entry:\noffset_low: ", ForegroundColor::White, BackgroundColor::Black);
-    unsafe {
-        print_u64(IDT[1].offset_low as u64, ForegroundColor::White, BackgroundColor::Black);
-    }
-    print_str("\nselector: ", ForegroundColor::White, BackgroundColor::Black);
-    unsafe {
-        print_u64(IDT[1].selector as u64, ForegroundColor::White, BackgroundColor::Black);
-    }
-    print_str("\nist: ", ForegroundColor::White, BackgroundColor::Black);
-    unsafe {
-        print_u64(IDT[1].ist as u64, ForegroundColor::White, BackgroundColor::Black);
-    }
-    print_str("\ntypes_attr: ", ForegroundColor::White, BackgroundColor::Black);
-    unsafe {
-        print_u64(IDT[1].types_attr as u64, ForegroundColor::White, BackgroundColor::Black);
-    }
-    print_str("\noffset_mid: ", ForegroundColor::White, BackgroundColor::Black);
-    unsafe {
-        print_u64(IDT[1].offset_mid as u64, ForegroundColor::White, BackgroundColor::Black);
-    }
-    print_str("\noffset_high: ", ForegroundColor::White, BackgroundColor::Black);
-    unsafe {
-        print_u64(IDT[1].offset_high as u64, ForegroundColor::White, BackgroundColor::Black);
-    }
-    print_str("\nzero: ", ForegroundColor::White, BackgroundColor::Black);
-    unsafe {
-        print_u64(IDT[1].zero as u64, ForegroundColor::White, BackgroundColor::Black);
-    }
-    print_str("\n", ForegroundColor::White, BackgroundColor::Black);
-
-    print_str("Enabling keyboard IDT\n", ForegroundColor::White, BackgroundColor::Black);
     outb(0x21, 0xFD);
     outb(0xA1, 0xFF);
 
