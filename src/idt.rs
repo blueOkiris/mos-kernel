@@ -50,7 +50,7 @@ pub struct IdtDescriptor {
 }
 
 // Keyboard scan codes; TODO: Move to user space
-const SCANCODE_TABLE: [char; 88] = [
+const SCANCODE_TABLE: [char; 89] = [
     '\0', // Nothing
     '\0', // Escape - 0x01
     '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=',
@@ -59,7 +59,7 @@ const SCANCODE_TABLE: [char; 88] = [
     '\0', // Left control - 0x1D
     'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l',  ';', '\'', '`',
     '\0', // Left shift - 0x2A
-    '\\', 'z', 'x', 'c', 'v', 'b', 'n', 'm', '.', '/',
+    '\\', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/',
     '\0', // Right shift - 0x36
     '*',
     '\0', // Left alt - 0x38
