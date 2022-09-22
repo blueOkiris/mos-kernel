@@ -11,10 +11,10 @@ use crate::{
 
 #[no_mangle]
 pub extern "C" fn kernel_start() {
-    idt_init();
-
     clear_screen(Color::Black);
     print_color_welcome();
+
+    idt_init();    
 }
 
 fn print_color_welcome() {
