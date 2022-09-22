@@ -14,7 +14,7 @@ static mut CURSOR_Y: u8 = 0;
 
 #[derive(Clone, Copy)]
 #[repr(u8)]
-pub enum ForegroundColor {
+pub enum Color {
     Black = 0x00,
     Blue = 0x01,
     Green = 0x02,
@@ -31,27 +31,6 @@ pub enum ForegroundColor {
     LightMagenta = 0x0D,
     Yellow = 0x0E,
     White = 0x0F
-}
-
-#[derive(Clone, Copy)]
-#[repr(u8)]
-pub enum BackgroundColor {
-    Black = 0x00,
-    Blue = 0x10,
-    Green = 0x20,
-    Cyan = 0x30,
-    Red = 0x40,
-    Magenta = 0x50,
-    Brown = 0x60,
-    LightGray = 0x70,
-    DarkGray = 0x80,
-    LightBlue = 0x90,
-    LightGreen = 0xA0,
-    LightCyan = 0xB0,
-    LightRed = 0xC0,
-    LightMagenta = 0xD0,
-    Yellow = 0xE0,
-    White = 0xF0
 }
 
 pub fn get_cursor_pos() -> (u8, u8) {
@@ -77,7 +56,7 @@ pub fn set_cursor_pos(x: u8, y: u8) {
 }
 
 // Could probably optimize to set 4 chars at a time
-pub fn print_str(msg: &str, fg: ForegroundColor, bg: BackgroundColor) {
+pub fn print_str(msg: &str, fg: Color, bg: Color) {
     // Get references to the data we need
     let (mut crsr_x, mut crsr_y) = get_cursor_pos();
     let video_mem = VGA_MEMORY as *mut u8;
@@ -95,7 +74,7 @@ pub fn print_str(msg: &str, fg: ForegroundColor, bg: BackgroundColor) {
                     let pos = video_mem.add(((offset as u16) * 2) as usize);
                     *pos = c as u8;
                     let pos = pos.add(1);
-                    *pos = fg as u8 | bg as u8;
+                    *pos = fg as u8 | ((bg as u8) << 4);
                 }
                 crsr_x += 1;
             }
@@ -116,7 +95,7 @@ pub fn print_str(msg: &str, fg: ForegroundColor, bg: BackgroundColor) {
     set_cursor_pos(new_crsr_x, new_crsr_y);
 }
 
-pub fn print_u64(val: u64, fg: ForegroundColor, bg: BackgroundColor) {
+pub fn print_hex(val: u64, fg: Color, bg: Color) {
     // Get references to the data we need
     let (mut crsr_x, crsr_y) = get_cursor_pos();
     let video_mem = VGA_MEMORY as *mut u8;
@@ -142,7 +121,7 @@ pub fn print_u64(val: u64, fg: ForegroundColor, bg: BackgroundColor) {
             let pos = video_mem.add(((offset as u16) * 2) as usize);
             *pos = high_c as u8;
             let pos = pos.add(1);
-            *pos = fg as u8 | bg as u8;
+            *pos = fg as u8 | ((bg as u8) << 4);
         }
         crsr_x += 1;
 
@@ -151,7 +130,7 @@ pub fn print_u64(val: u64, fg: ForegroundColor, bg: BackgroundColor) {
             let pos = video_mem.add(((offset as u16) * 2) as usize);
             *pos = low_c as u8;
             let pos = pos.add(1);
-            *pos = fg as u8 | bg as u8;
+            *pos = fg as u8 | ((bg as u8) << 4);
         }
         crsr_x += 1;
     }
@@ -171,9 +150,9 @@ pub fn print_u64(val: u64, fg: ForegroundColor, bg: BackgroundColor) {
 }
 
 // Could probably optimize to set 4 chars at a time. Needs memset for that tho
-pub fn clear_screen(color: BackgroundColor) {
+pub fn clear_screen(color: Color) {
     // 64-bit OS, so we can set 4 colors at a time to speed stuff up
-    let col_u8 = color as u8 | ForegroundColor::White as u8;
+    let col_u8 = ((color as u8) << 4) | Color::White as u8;
 
     let video_mem = VGA_MEMORY as *mut u8;
     for offset in 0..VGA_WIDTH as usize * VGA_HEIGHT as usize * 2 {
