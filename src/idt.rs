@@ -12,7 +12,7 @@ use crate::{
     io::{
         inb, outb
     }, terminal::{
-        print_str, ForegroundColor, BackgroundColor, print_u64
+        print_str, Color, print_hex
     }
 };
 
@@ -51,8 +51,8 @@ pub struct IdtDescriptor {
 
 #[no_mangle]
 pub extern "C" fn isr1_handler() {
-    print_u64(inb(0x60) as u64, ForegroundColor::White, BackgroundColor::Black);
-    print_str("\n", ForegroundColor::White, BackgroundColor::Black);
+    print_hex(inb(0x60) as u64, Color::White, Color::Black);
+    print_str("\n", Color::White, Color::Black);
 
     outb(0x20, 0x20);
     outb(0xA0, 0x20);
