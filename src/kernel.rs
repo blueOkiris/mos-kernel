@@ -5,59 +5,54 @@
 
 use crate::{
     terminal::{
-        set_cursor_pos, print_str, clear_screen,
-        ForegroundColor, BackgroundColor
+        set_cursor_pos, print_str, clear_screen, Color
     }, idt::idt_init
 };
 
 #[no_mangle]
 pub extern "C" fn kernel_start() {
-    clear_screen(BackgroundColor::Black);
-
-    print_all_colors();
-
-    set_cursor_pos(3, 4);
-    print_str("Hello from rust kernel!\n", ForegroundColor::White, BackgroundColor::Black);
-    print_str("  Hello from rust kernel!\r", ForegroundColor::LightGray, BackgroundColor::Green);
-    print_str("Goodbye\n", ForegroundColor::Yellow, BackgroundColor::LightBlue);
-
     idt_init();
+
+    clear_screen(Color::White);
+    print_color_welcome();
 }
 
-fn print_all_colors() {
+fn print_color_welcome() {
     set_cursor_pos(0, 0);
-    print_str(" ", ForegroundColor::Black, BackgroundColor::Black);
-    print_str(" ", ForegroundColor::Black, BackgroundColor::Blue);
-    print_str(" ", ForegroundColor::Black, BackgroundColor::Green);
-    print_str(" ", ForegroundColor::Black, BackgroundColor::Cyan);
-    print_str(" ", ForegroundColor::Black, BackgroundColor::Red);
-    print_str(" ", ForegroundColor::Black, BackgroundColor::Magenta);
-    print_str(" ", ForegroundColor::Black, BackgroundColor::Brown);
-    print_str(" ", ForegroundColor::Black, BackgroundColor::LightGray);
-    print_str(" ", ForegroundColor::Black, BackgroundColor::DarkGray);
-    print_str(" ", ForegroundColor::Black, BackgroundColor::LightBlue);
-    print_str(" ", ForegroundColor::Black, BackgroundColor::LightCyan);
-    print_str(" ", ForegroundColor::Black, BackgroundColor::LightGreen);
-    print_str(" ", ForegroundColor::Black, BackgroundColor::LightRed);
-    print_str(" ", ForegroundColor::Black, BackgroundColor::LightMagenta);
-    print_str(" ", ForegroundColor::Black, BackgroundColor::Yellow);
-    print_str(" ", ForegroundColor::Black, BackgroundColor::White);
+    print_str(" ", Color::Black, Color::Black);
+    print_str(" ", Color::Black, Color::Blue);
+    print_str(" ", Color::Black, Color::Green);
+    print_str(" ", Color::Black, Color::Cyan);
+    print_str(" ", Color::Black, Color::Red);
+    print_str(" ", Color::Black, Color::Magenta);
+    print_str(" ", Color::Black, Color::Brown);
+    print_str(" ", Color::Black, Color::LightGray);
+    print_str(" ", Color::Black, Color::DarkGray);
+    print_str(" ", Color::Black, Color::LightBlue);
+    print_str(" ", Color::Black, Color::LightCyan);
+    print_str(" ", Color::Black, Color::LightGreen);
+    print_str(" ", Color::Black, Color::LightRed);
+    print_str(" ", Color::Black, Color::LightMagenta);
+    print_str(" ", Color::Black, Color::Yellow);
+    print_str(" ", Color::Black, Color::White);
 
     set_cursor_pos(0, 1);
-    print_str("A", ForegroundColor::Black, BackgroundColor::White);
-    print_str("A", ForegroundColor::Blue, BackgroundColor::White);
-    print_str("A", ForegroundColor::Green, BackgroundColor::White);
-    print_str("A", ForegroundColor::Cyan, BackgroundColor::White);
-    print_str("A", ForegroundColor::Red, BackgroundColor::White);
-    print_str("A", ForegroundColor::Magenta, BackgroundColor::White);
-    print_str("A", ForegroundColor::Brown, BackgroundColor::White);
-    print_str("A", ForegroundColor::LightGray, BackgroundColor::White);
-    print_str("A", ForegroundColor::DarkGray, BackgroundColor::White);
-    print_str("A", ForegroundColor::LightBlue, BackgroundColor::White);
-    print_str("A", ForegroundColor::LightCyan, BackgroundColor::White);
-    print_str("A", ForegroundColor::LightGreen, BackgroundColor::White);
-    print_str("A", ForegroundColor::LightRed, BackgroundColor::White);
-    print_str("A", ForegroundColor::LightMagenta, BackgroundColor::White);
-    print_str("A", ForegroundColor::Yellow, BackgroundColor::White);
-    print_str("A", ForegroundColor::White, BackgroundColor::Black);
+    print_str("W", Color::Black, Color::White);
+    print_str("e", Color::Blue, Color::White);
+    print_str("l", Color::Green, Color::White);
+    print_str("c", Color::Cyan, Color::White);
+    print_str("o", Color::Red, Color::White);
+    print_str("m", Color::Magenta, Color::White);
+    print_str("e", Color::Brown, Color::White);
+    print_str(" ", Color::LightGray, Color::White);
+    print_str("t", Color::DarkGray, Color::White);
+    print_str("o", Color::LightBlue, Color::White);
+    print_str(" ", Color::LightCyan, Color::White);
+    print_str("M", Color::LightGreen, Color::White);
+    print_str("O", Color::LightRed, Color::White);
+    print_str("S", Color::LightMagenta, Color::White);
+    print_str("!", Color::Yellow, Color::White);
+    print_str("!", Color::White, Color::Black);
+
+    set_cursor_pos(0, 2);
 }
