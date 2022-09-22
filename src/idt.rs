@@ -85,7 +85,7 @@ const SCANCODE_TABLE: [char; 88] = [
 fn keyboard_handler(code: u8, c: char, is_rel: bool) {
     if c != '\0' && !is_rel {
         print_char(c, Color::Black, Color::White);    
-    } else {
+    } else if !is_rel {
         match code {
             0x01 => print_str("<ESC>", Color::Blue, Color::White),
             0x0E => backspace(),
@@ -120,10 +120,10 @@ pub extern "C" fn isr1_handler() {
     let mut c = '\0';
     if (code as usize) < SCANCODE_TABLE.len() {
         c = SCANCODE_TABLE[code as usize];
-    } else if (code & 0x80) > 0 && ((code & (!0x80)) as usize) < SCANCODE_TABLE.len() {
+    } /*else if (code & 0x80) > 0 && ((code & (!0x80)) as usize) < SCANCODE_TABLE.len() {
         c = SCANCODE_TABLE[(code & (!0x80)) as usize];
-    }
-    let rel = (code | 0x80) > 0;
+    }*/
+    let rel = false;//(code | 0x80) > 0;
     keyboard_handler(code, c, rel); // TODO: call user land code somehow
 
     outb(0x20, 0x20);
