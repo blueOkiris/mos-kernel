@@ -84,30 +84,30 @@ const SCANCODE_TABLE: [char; 88] = [
 // TODO: Move to user space
 fn keyboard_handler(code: u8, c: char, is_rel: bool) {
     if c != '\0' && !is_rel {
-        print_char(c, Color::Black, Color::White);    
+        print_char(c, Color::White, Color::Black);    
     } else if !is_rel {
         match code {
-            0x01 => print_str("<ESC>", Color::Blue, Color::White),
+            0x01 => print_str("<ESC>", Color::Blue, Color::Black),
             0x0E => backspace(),
-            0x1D => print_str("<LCTRL>", Color::Blue, Color::White),
-            0x2A => print_str("<LSHIFT>", Color::Blue, Color::White),
-            0x36 => print_str("<RSHIFT>", Color::Blue, Color::White),
-            0x38 => print_str("<LALT>", Color::Blue, Color::White),
-            0x3A => print_str("<CPSLK>", Color::Blue, Color::White),
-            0x3B => print_str("<F1>", Color::Blue, Color::White),
-            0x3C => print_str("<F2>", Color::Blue, Color::White),
-            0x3D => print_str("<F3>", Color::Blue, Color::White),
-            0x3E => print_str("<F4>", Color::Blue, Color::White),
-            0x3F => print_str("<F5>", Color::Blue, Color::White),
-            0x40 => print_str("<F6>", Color::Blue, Color::White),
-            0x41 => print_str("<F7>", Color::Blue, Color::White),
-            0x42 => print_str("<F8>", Color::Blue, Color::White),
-            0x43 => print_str("<F9>", Color::Blue, Color::White),
-            0x44 => print_str("<F10>", Color::Blue, Color::White),
-            0x45 => print_str("<NMLK>", Color::Blue, Color::White),
-            0x46 => print_str("<SCRLK>", Color::Blue, Color::White),
-            0x57 => print_str("<F11>", Color::Blue, Color::White),
-            0x48 => print_str("<F12>", Color::Blue, Color::White),
+            0x1D => print_str("<LCTRL>", Color::Blue, Color::Black),
+            0x2A => print_str("<LSHIFT>", Color::Blue, Color::Black),
+            0x36 => print_str("<RSHIFT>", Color::Blue, Color::Black),
+            0x38 => print_str("<LALT>", Color::Blue, Color::Black),
+            0x3A => print_str("<CPSLK>", Color::Blue, Color::Black),
+            0x3B => print_str("<F1>", Color::Blue, Color::Black),
+            0x3C => print_str("<F2>", Color::Blue, Color::Black),
+            0x3D => print_str("<F3>", Color::Blue, Color::Black),
+            0x3E => print_str("<F4>", Color::Blue, Color::Black),
+            0x3F => print_str("<F5>", Color::Blue, Color::Black),
+            0x40 => print_str("<F6>", Color::Blue, Color::Black),
+            0x41 => print_str("<F7>", Color::Blue, Color::Black),
+            0x42 => print_str("<F8>", Color::Blue, Color::Black),
+            0x43 => print_str("<F9>", Color::Blue, Color::Black),
+            0x44 => print_str("<F10>", Color::Blue, Color::Black),
+            0x45 => print_str("<NMLK>", Color::Blue, Color::Black),
+            0x46 => print_str("<SCRLK>", Color::Blue, Color::Black),
+            0x57 => print_str("<F11>", Color::Blue, Color::Black),
+            0x48 => print_str("<F12>", Color::Blue, Color::Black),
             _ => {} // Not handled
         }
     }
