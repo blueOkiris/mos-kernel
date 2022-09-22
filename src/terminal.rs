@@ -55,6 +55,43 @@ pub fn set_cursor_pos(x: u8, y: u8) {
     }
 }
 
+pub fn print_char(c: char, fg: Color, bg: Color) {
+    // Get references to the data we need
+    let (mut crsr_x, mut crsr_y) = get_cursor_pos();
+    let video_mem = VGA_MEMORY as *mut u8;
+
+    let offset = crsr_y as u16 * VGA_WIDTH as u16 + crsr_x as u16;
+    match c {
+        '\n' => {
+            crsr_y += 1;
+            crsr_x = 0;
+        }, '\r' => {
+            crsr_x = 0;
+        }, _ => {
+            unsafe {
+                let pos = video_mem.add(((offset as u16) * 2) as usize);
+                *pos = c as u8;
+                let pos = pos.add(1);
+                *pos = fg as u8 | ((bg as u8) << 4);
+            }
+            crsr_x += 1;
+        }
+    }
+    
+    // Update cursor
+    let mut new_crsr_x = crsr_x;
+    let mut new_crsr_y = if new_crsr_x >= VGA_WIDTH {
+        new_crsr_x -= VGA_WIDTH;
+        crsr_y + 1
+    } else {
+        crsr_y
+    };
+    if new_crsr_y >= VGA_HEIGHT {
+        new_crsr_y = 0;
+    }
+    set_cursor_pos(new_crsr_x, new_crsr_y);
+}
+
 // Could probably optimize to set 4 chars at a time
 pub fn print_str(msg: &str, fg: Color, bg: Color) {
     // Get references to the data we need
