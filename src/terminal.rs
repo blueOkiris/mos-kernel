@@ -147,7 +147,7 @@ pub fn backspace() {
         crsr_x -= 1;
     }
     set_cursor_pos(crsr_x, crsr_y);
-    print_char(' ', Color::Black, Color::White);
+    print_char(' ', Color::White, Color::Black);
     set_cursor_pos(crsr_x, crsr_y);
 }
 
