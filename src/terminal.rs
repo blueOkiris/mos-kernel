@@ -67,6 +67,8 @@ pub fn print_char(c: char, fg: Color, bg: Color) {
             crsr_x = 0;
         }, '\r' => {
             crsr_x = 0;
+        }, '\t' => {
+            crsr_x += 4;
         }, _ => {
             unsafe {
                 let pos = video_mem.add(((offset as u16) * 2) as usize);
@@ -92,6 +94,20 @@ pub fn print_char(c: char, fg: Color, bg: Color) {
     set_cursor_pos(new_crsr_x, new_crsr_y);
 }
 
+pub fn backspace() {
+    let (mut crsr_x, mut crsr_y) = get_cursor_pos();
+    if crsr_x == 0 { // Ope! Gotta move up a line
+        if crsr_y == 0 { // Can't move up, so
+            crsr_y = VGA_HEIGHT - 1; // Go to bottom
+        } else {
+            crsr_y -= 1;
+        }
+    } else {
+        crsr_x -= 1;
+    }
+    set_cursor_pos(crsr_x, crsr_y);
+}
+
 // Could probably optimize to set 4 chars at a time
 pub fn print_str(msg: &str, fg: Color, bg: Color) {
     // Get references to the data we need
@@ -106,6 +122,8 @@ pub fn print_str(msg: &str, fg: Color, bg: Color) {
                 crsr_x = 0;
             }, '\r' => {
                 crsr_x = 0;
+            }, '\t' => {
+                crsr_x += 4;
             }, _ => {
                 unsafe {
                     let pos = video_mem.add(((offset as u16) * 2) as usize);
