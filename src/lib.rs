@@ -13,3 +13,5 @@ mod panic;
 mod terminal;
 mod io;
 mod idt;
+mod keyboard;
+
