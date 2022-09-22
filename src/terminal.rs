@@ -147,8 +147,7 @@ pub fn backspace() {
         crsr_x -= 1;
     }
     set_cursor_pos(crsr_x, crsr_y);
-    let (fg, bg) = get_current_col();
-    print_char(' ', fg, bg);
+    print_char(' ', Color::Black, Color::White);
     set_cursor_pos(crsr_x, crsr_y);
 }
 
