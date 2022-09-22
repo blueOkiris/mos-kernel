@@ -142,6 +142,7 @@ pub fn backspace() {
         } else {
             crsr_y -= 1;
         }
+        crsr_x = VGA_WIDTH - 1;
     } else {
         crsr_x -= 1;
     }
