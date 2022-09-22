@@ -33,10 +33,50 @@ pub enum Color {
     White = 0x0F
 }
 
+impl TryFrom<u8> for Color {
+    type Error = ();
+
+    fn try_from(v: u8) -> Result<Self, Self::Error> {
+        match v {
+            0x00 => Ok(Color::Black),
+            0x01 => Ok(Color::Blue),
+            0x02 => Ok(Color::Green),
+            0x03 => Ok(Color::Cyan),
+            0x04 => Ok(Color::Red),
+            0x05 => Ok(Color::Magenta),
+            0x06 => Ok(Color::Brown),
+            0x07 => Ok(Color::LightGray),
+            0x08 => Ok(Color::DarkGray),
+            0x09 => Ok(Color::LightBlue),
+            0x0A => Ok(Color::LightGreen),
+            0x0B => Ok(Color::LightCyan),
+            0x0C => Ok(Color::LightRed),
+            0x0D => Ok(Color::LightMagenta),
+            0x0E => Ok(Color::Yellow),
+            0x0F => Ok(Color::White),
+            _ => Err(()),
+        }
+    }
+}
+
 pub fn get_cursor_pos() -> (u8, u8) {
     unsafe {
         (CURSOR_X, CURSOR_Y)
     }
+}
+
+pub fn get_current_col() -> (Color, Color) {
+    let (crsr_x, crsr_y) = get_cursor_pos();
+    let offset = crsr_y as u16 * VGA_WIDTH as u16 + crsr_x as u16;
+    let video_mem = VGA_MEMORY as *mut u8;
+    let col_u8 = unsafe {
+        let pos = video_mem.add((offset * 2) as usize);
+        let pos = pos.add(1);
+        *pos
+    };
+    let fg = col_u8 & 0x0F;
+    let bg = (col_u8 >> 4) & 0x0F;
+    (Color::try_from(fg).unwrap(), Color::try_from(bg).unwrap())
 }
 
 pub fn set_cursor_pos(x: u8, y: u8) {
@@ -105,6 +145,9 @@ pub fn backspace() {
     } else {
         crsr_x -= 1;
     }
+    set_cursor_pos(crsr_x, crsr_y);
+    let (fg, bg) = get_current_col();
+    print_char(' ', fg, bg);
     set_cursor_pos(crsr_x, crsr_y);
 }
 
