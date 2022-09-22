@@ -10,9 +10,9 @@ use core::{
 };
 use crate::{
     io::{
-        inb, outb
+        inb, outb, remap_pic
     }, terminal::{
-        print_str, Color, print_hex
+        Color, print_char
     }
 };
 
@@ -49,10 +49,19 @@ pub struct IdtDescriptor {
     base: u64
 }
 
+// Keyboard scan codes
+const SCANCODE_TABLE: [char; 58] = [
+    '\0', '\0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '\0',
+    '\0', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\0', '\0',
+    'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l',  ';', '\'', '`', '\0', '\\',
+    'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '\0', '*', '\0', ' '
+];
+
+// Keyboard handler
 #[no_mangle]
 pub extern "C" fn isr1_handler() {
-    print_hex(inb(0x60) as u64, Color::White, Color::Black);
-    print_str("\n", Color::White, Color::Black);
+    let code = inb(0x60);
+    print_char(SCANCODE_TABLE[code as usize], Color::Black, Color::White);
 
     outb(0x20, 0x20);
     outb(0xA0, 0x20);
@@ -74,19 +83,21 @@ fn isr1() -> ! {
 
 pub fn idt_init() {
     let isr_ptr = isr1 as *const () as u64;
-    for table in 0..256 {
-        unsafe {
-            IDT[table].offset_low = (isr_ptr & 0x000000000000FFFF) as u16;
-            IDT[table].offset_mid = ((isr_ptr & 0x00000000FFFF0000) >> 16) as u16;
-            IDT[table].offset_high = ((isr_ptr & 0xFFFFFFFF00000000) >> 32) as u32;
 
-            // Probably not be needed
-            IDT[table].zero = 0;
-            IDT[table].ist = 0;
-            IDT[table].selector = 0x08;
-            IDT[table].types_attr = 0x8E;
-        }
+    // Enable just keyboard. All others cause crash
+    unsafe {
+        IDT[1].offset_low = (isr_ptr & 0x000000000000FFFF) as u16;
+        IDT[1].offset_mid = ((isr_ptr & 0x00000000FFFF0000) >> 16) as u16;
+        IDT[1].offset_high = ((isr_ptr & 0xFFFFFFFF00000000) >> 32) as u32;
+
+        // Probably not be needed
+        IDT[1].zero = 0;
+        IDT[1].ist = 0;
+        IDT[1].selector = 0x08;
+        IDT[1].types_attr = 0x8E;
     }
+
+    remap_pic();
 
     outb(0x21, 0xFD);
     outb(0xA1, 0xFF);
