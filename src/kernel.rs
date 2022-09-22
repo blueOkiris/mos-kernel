@@ -13,7 +13,7 @@ use crate::{
 pub extern "C" fn kernel_start() {
     idt_init();
 
-    clear_screen(Color::White);
+    clear_screen(Color::Black);
     print_color_welcome();
 }
 
